@@ -7,7 +7,6 @@ let backendApi = "http://localhost:5000"
 async function renderUser() {
     let response = await fetch(backendApi +'/users')
     response = await response.json()
-    console.log(response);
     for(let i of response) {
         let li = document.createElement('li')
         li.innerHTML = `
@@ -19,32 +18,37 @@ async function renderUser() {
         navbarList.append(li)
     }
 
+    videoRender(response)
+
 }
 
-async function videRender() {
+async function videoRender(users) {
     let videoResponse = await fetch(backendApi + '/videos')
     videoResponse = await videoResponse.json()
-    console.log(videoResponse);
     for(let video of videoResponse) {
+        console.log(video);
+        const user = users.find(el => el.userId == video.userId)
         let li = document.createElement('li')
         li.className = "iframe"
         li.innerHTML = `
-            <video src="${backendApi + video}" controls=""></video>
+            <video src="${backendApi + video.videoUrl}" controls=""></video>
             <div class="iframe-footer">
-                <img src="https://cdn-icons-png.flaticon.com/512/146/146031.png" alt="channel-icon">
+                <img src="${backendApi + user.userImg}" alt="channel-icon">
                 <div class="iframe-footer-text">
-                    <h2 class="channel-name">Hikmat</h2>
-                    <h3 class="iframe-title">Falonchiga otvet</h3>
-                    <time class="uploaded-time">2020/02/08 | 15.24</time>
+                    <h2 class="channel-name">${user.username}</h2>
+                    <h3 class="iframe-title">${video.videoTitle}</h3>
+                    <time class="uploaded-time">${video.videoUploadedDate}</time>
                     <a class="download" href="#">
-                        <span>20 MB</span>
+                        <span>${video.videoSize}</span>
                         <img src="./img/download.png">
                     </a>
                 </div>                  
             </div>      
         `
+
+        iframesList.append(li)
     }
 }
 
+
 renderUser()
-videRender()
