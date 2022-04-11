@@ -5,6 +5,9 @@ let username = document.querySelector('#usernameInput')
 let password = document.querySelector('#passwordInput')
 const showButton = document.querySelector('.zmdi-eye') 
 
+const localStorage = window.localStorage.getItem("token")
+if(localStorage) window.location = '/admin'
+
 submitButton.onclick = async el => {
     el.preventDefault()
     let formData = new FormData()
@@ -22,6 +25,7 @@ submitButton.onclick = async el => {
     response = await response.json()
     if(response.token) {
         window.localStorage.setItem('token', response.token)
+        window.localStorage.setItem('userImg', response.img)
         alert(response.message)
     }
     

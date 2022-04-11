@@ -13,6 +13,7 @@ headers = {
     
     if(response.status == 401) {
         window.localStorage.removeItem("token")
+        window.localStorage.removeItem("userImg")
         window.location = '/login'
         alert("Token is invalid")
     }

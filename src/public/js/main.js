@@ -4,6 +4,11 @@ let navbarList = document.querySelector('.navbar-list')
 let iframesList = document.querySelector('.iframes-list')
 let backendApi = "http://localhost:5000"
 
+const profileImg = window.localStorage.getItem('userImg')
+if(profileImg) {
+	avatarImg.src = backendApi + profileImg
+}
+
 async function renderUser() {
     let response = await fetch(backendApi +'/users')
     response = await response.json()
@@ -22,33 +27,63 @@ async function renderUser() {
 
 }
 
-async function videoRender(users) {
+    async function videoRender(users, search) {
+
     let videoResponse = await fetch(backendApi + '/videos')
     videoResponse = await videoResponse.json()
-    for(let video of videoResponse) {
-        console.log(video);
-        const user = users.find(el => el.userId == video.userId)
-        let li = document.createElement('li')
-        li.className = "iframe"
-        li.innerHTML = `
-            <video src="${backendApi + video.videoUrl}" controls=""></video>
-            <div class="iframe-footer">
-                <img src="${backendApi + user.userImg}" alt="channel-icon">
-                <div class="iframe-footer-text">
-                    <h2 class="channel-name">${user.username}</h2>
-                    <h3 class="iframe-title">${video.videoTitle}</h3>
-                    <time class="uploaded-time">${video.videoUploadedDate}</time>
-                    <a class="download" href="#">
-                        <span>${video.videoSize}</span>
-                        <img src="./img/download.png">
-                    </a>
-                </div>                  
-            </div>      
-        `
 
-        iframesList.append(li)
+    // const videos = await request(
+	// 	'/videos' + 
+	// 	(userId ? ('?userId=' + userId) : "") +
+	// 	(search ? ('?search=' + search) : "")
+	// )
+    
+
+	if(!search) {
+		searchInput.value = null
+	}
+
+	if(!search) {
+		datalist.innerHTML = null
+		for(let video of videoResponse) {
+			let option = document.createElement('option')
+			option.value = video.videoTitle
+			datalist.append(option)
+		}
+	}
+
+    if(users) {
+        for(let video of videoResponse) {
+            const user = users.find(el => el.userId == video.userId)
+            let li = document.createElement('li')
+            li.className = "iframe"
+            li.innerHTML = `
+                <video src="${backendApi + video.videoUrl}" controls=""></video>
+                <div class="iframe-footer">
+                    <img src="${backendApi + user.userImg}" alt="channel-icon">
+                    <div class="iframe-footer-text">
+                        <h2 class="channel-name">${user.username}</h2>
+                        <h3 class="iframe-title">${video.videoTitle}</h3>
+                        <time class="uploaded-time">${video.videoUploadedDate}</time>
+                        <a class="download" href="#">
+                            <span>${video.videoSize}</span>
+                            <img src="./img/download.png">
+                        </a>
+                    </div>                  
+                </div>      
+            `
+    
+            iframesList.append(li)
+        }
     }
 }
 
+
+searchForm.onsubmit = event => {
+	event.preventDefault()
+	if(searchInput.value != "") {
+		return videoRender(null, searchInput.value)
+	}
+}
 
 renderUser()
