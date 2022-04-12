@@ -1,4 +1,4 @@
-const backendApi = 'http://localhost:5000'
+const backendApi = 'http://192.168.0.15:5000'
 
 let customUpload = document.querySelector('#uploadInput')
 let username = document.querySelector('#usernameInput') 

@@ -1,9 +1,10 @@
-let backendApi = "http://localhost:5000" 
+let backendApi = "http://192.168.0.15:5000" 
 let username = document.querySelector('#usernameInput') 
 let password = document.querySelector('#passwordInput')
 const form = document.querySelector(".site-form")
 
-const localStorage = window.localStorage.getItem("token")
+const token = window.localStorage.getItem("token")
+const userId = window.localStorage.getItem("token")
 if(localStorage) window.location = '/admin'
 
 form.onsubmit = async el => {
